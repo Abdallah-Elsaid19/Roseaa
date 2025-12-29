@@ -1,5 +1,6 @@
 import Swal from "sweetalert2";
 import type { NavigateFunction } from "react-router-dom";
+import type { SweetAlertResult } from "sweetalert2";
 
 
 export const showSuccessAlert = (message: string) => {
@@ -79,7 +80,7 @@ export const showLoginRequired = (message = "Please login first", navigate?: Nav
     cancelButtonText: "Cancel",
     background: "#fff",
     color: "#333",
-  }).then((result) => {
+  }).then((result: SweetAlertResult) => {
     if (result.isConfirmed && navigate) {
       setTimeout(() => {
         navigate("/login");
@@ -103,7 +104,7 @@ export const showLogout = (navigate?: NavigateFunction, dispatch?: AppDispatch) 
     cancelButtonColor: "gray",
     confirmButtonText: "Yes, log out",
     cancelButtonText: "Cancel",
-  }).then((result) => {
+  }).then((result: SweetAlertResult) => {
     if (result.isConfirmed) {
 
       localStorage.removeItem("user");
@@ -141,11 +142,16 @@ export const showDiscountPrompt = async () => {
     showCancelButton: true,
     confirmButtonText: "Apply",
     cancelButtonText: "Cancel",
-    inputValidator: (value) => {
-      if (!value) return "Please enter a discount percentage!";
-      if (isNaN(value) || value < 0 || value > 100)
-        return "Discount must be between 0 and 100!";
-    },
+    inputValidator: (value: string | null) => {
+  if (!value) return "Please enter a discount percentage!";
+
+  const numericValue = Number(value); // تحويل string لرقم
+
+  if (isNaN(numericValue) || numericValue < 0 || numericValue > 100) {
+    return "Discount must be between 0 and 100!";
+  }
+},
+
   });
 
   return discount ? Number(discount) : null;
